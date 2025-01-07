@@ -29,7 +29,7 @@ public:
 public:
 	// Edit / Visible
 	// Anywhere / DefaultsOnly / InstanceOnly
-	UPROPERTY(EditAnywhere, Category = Coding)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Coding)
 	int32 Number;
 
 	UPROPERTY(EditAnywhere, Category = Coding)
@@ -41,7 +41,19 @@ public:
 	UPROPERTY(EditAnywhere, Category = Coding)
 	FString MyName = TEXT("Jacob Yi");
 
+	UPROPERTY()
+	AActor * a;
+
+	UFUNCTION(BlueprintCallable)
 	void Print(FString str);
 
+	UFUNCTION(BlueprintPure)
+	int PrintPure(FString str);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void PrintImp(const FString& s);
+	
+	UFUNCTION(BlueprintNativeEvent)
+	void PrintNat(const FString& s);
 
 };

@@ -55,6 +55,16 @@ void ACodingPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 void ACodingPawn::Print(FString str)
 {
 	UE_LOG(LogTemp, Warning, TEXT("%s"), *str);
-	GEngine->AddOnScreenDebugMessage(0, 10, FColor::Cyan, str);
+	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Cyan, str);
+}
+
+int ACodingPawn::PrintPure(FString str)
+{
+	return 0;
+}
+
+void ACodingPawn::PrintNat_Implementation(const FString& s)
+{
+	ACodingPawn::StaticClass()
 }
 
