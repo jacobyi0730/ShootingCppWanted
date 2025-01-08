@@ -42,7 +42,7 @@ public:
 	FString MyName = TEXT("Jacob Yi");
 
 	UPROPERTY()
-	AActor * a;
+	AActor* a;
 
 	UFUNCTION(BlueprintCallable)
 	void Print(FString str);

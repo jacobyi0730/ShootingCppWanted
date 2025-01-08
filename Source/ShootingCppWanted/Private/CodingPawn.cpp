@@ -65,6 +65,6 @@ int ACodingPawn::PrintPure(FString str)
 
 void ACodingPawn::PrintNat_Implementation(const FString& s)
 {
-	ACodingPawn::StaticClass()
+	
 }
 
