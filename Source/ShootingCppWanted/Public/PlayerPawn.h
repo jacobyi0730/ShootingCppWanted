@@ -57,7 +57,29 @@ public:
 	void OnMyFireReleased();
 
 	UPROPERTY(EditAnywhere)
-	class UClass* BulletFactory; 
+	TSubclassOf<class ABulletActor> BulletFactory;
+
+	// 자동으로 총을 쏘고 싶다.
+	// 버튼을 1회 누르면 총쏘기 시작 bAutoFire = true;
+	// 다시 누르면 총쏘기 정지	bAutoFire = false;
+	// 만약 bAutoFire == true
+	// 일정시간마다 총알을 Sapwn하고싶다.(주기)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool AutoTypeTimer = true;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bAutoFire;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float CurrentTime;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float FireTime = 0.5f;
+
+	void MakeBullet();
+	
+	FTimerHandle AutoFireHandle;
+
+
+	
 };
 
 
