@@ -3,6 +3,8 @@
 
 #include "PlayerPawn.h"
 
+#include "Components/ArrowComponent.h"
+
 // Sets default values
 APlayerPawn::APlayerPawn()
 {
@@ -15,6 +17,13 @@ APlayerPawn::APlayerPawn()
 	
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(RootComponent);
+
+	FirePosition = CreateDefaultSubobject<UArrowComponent>(TEXT("FirePosition"));
+	FirePosition->SetupAttachment(RootComponent);
+
+	FirePosition->SetRelativeLocationAndRotation(
+		FVector(0, 0, 90),
+		FRotator(90, 0, 0));
 }
 
 // Called when the game starts or when spawned
@@ -29,6 +38,7 @@ void APlayerPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// P = P0 + vt
 	FVector p0 = GetActorLocation();
 	// 사용자의 입력에따라 방향을 만들고
 	FVector dir = FVector(0, H, 0) + FVector(0, 0, V);
@@ -48,6 +58,10 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	// 가로축, 세로축 함수를 등록하고싶다.
 	PlayerInputComponent->BindAxis(TEXT("Horizontal"), this, &APlayerPawn::OnMyHorizontal);
 	PlayerInputComponent->BindAxis(TEXT("Vertical"), this, &APlayerPawn::OnMyVertical);
+
+	PlayerInputComponent->BindAction(TEXT("Fire"), IE_Pressed, this, &APlayerPawn::OnMyFirePressed);
+
+	PlayerInputComponent->BindAction(TEXT("Fire"), IE_Released, this, &APlayerPawn::OnMyFireReleased);
 }
 
 void APlayerPawn::OnMyHorizontal(float value)
@@ -62,4 +76,12 @@ void APlayerPawn::OnMyVertical(float value)
 	V = value;
 }
 
+void APlayerPawn::OnMyFirePressed()
+{
+	UE_LOG(LogTemp, Warning, TEXT("OnMyFirePressed"));
+}
 
+void APlayerPawn::OnMyFireReleased()
+{
+	UE_LOG(LogTemp, Warning, TEXT("OnMyFireReleased"));
+}

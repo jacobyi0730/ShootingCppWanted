@@ -49,6 +49,16 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float Speed = 500.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UArrowComponent* FirePosition;
+
+	void OnMyFirePressed();
+	void OnMyFireReleased();
+
+	UPROPERTY(EditAnywhere)
+	class UClass* BulletFactory; 
 };
+
 
 

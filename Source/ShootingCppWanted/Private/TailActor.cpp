@@ -29,7 +29,8 @@ void ATailActor::BeginPlay()
 	if (nullptr == Target)
 	{
 		// 주인공을 찾아서 Target으로 하고싶다.
-		Target = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+		//Target = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+		Target = GetWorld()->GetFirstPlayerController()->GetPawn();
 
 		//UGameplayStatics::GetActorOfClass(GetWorld(), APlayerPawn::StaticClass());
 	}
@@ -43,7 +44,7 @@ void ATailActor::Tick(float DeltaTime)
 	if (Target && Target->IsValidLowLevel())
 	{
 		// 목표를 향해 이동하고싶다.
-		// Target - Me
+		// Target <- Me
 		FVector dir = Target->GetActorLocation() - this->GetActorLocation();
 
 		SetActorLocation(GetActorLocation() + dir.GetSafeNormal() * Speed * DeltaTime);
