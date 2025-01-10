@@ -98,9 +98,9 @@ void APlayerPawn::OnMyVertical(float value)
 
 void APlayerPawn::OnMyFirePressed()
 {
-
+	bAutoFire = true;
 	// 이 함수가 호출되면 bAutoFire가 true라면 false로 false라면 true로 하고싶다.
-	bAutoFire = !bAutoFire;
+	//bAutoFire = !bAutoFire;
 	// if (bAutoFire)
 	// 	bAutoFire = false;
 	// else
@@ -120,16 +120,18 @@ void APlayerPawn::OnMyFirePressed()
 			GetWorld()->GetTimerManager().SetTimer(
 				AutoFireHandle, this, &APlayerPawn::MakeBullet, FireTime, true);
 		}
-		else
-		{
-			// 타이머 중지
-			GetWorld()->GetTimerManager().ClearTimer(AutoFireHandle);
-		}
 	}
 }
 
 void APlayerPawn::OnMyFireReleased()
 {
+	bAutoFire = false;
+
+	if (true == AutoTypeTimer)
+	{
+		// 타이머 중지
+		GetWorld()->GetTimerManager().ClearTimer(AutoFireHandle);
+	}
 }
 
 void APlayerPawn::MakeBullet()
