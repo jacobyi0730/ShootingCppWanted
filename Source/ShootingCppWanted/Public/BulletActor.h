@@ -23,9 +23,11 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+
 	// 외형을 만들고 싶다.
 	UPROPERTY(EditAnywhere)
-	class USceneComponent* Root;
+	class UBoxComponent* Root;
 	
 	UPROPERTY(EditAnywhere)
 	class UStaticMeshComponent* Mesh;

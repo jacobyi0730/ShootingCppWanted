@@ -5,6 +5,8 @@
 
 #include "BulletActor.h"
 #include "Components/ArrowComponent.h"
+#include "Components/BoxComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 APlayerPawn::APlayerPawn()
@@ -12,7 +14,7 @@ APlayerPawn::APlayerPawn()
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	// 루트 컴포넌트를 만들고싶다.
-	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+	Root = CreateDefaultSubobject<UBoxComponent>(TEXT("Root"));
 	// 만든 컴포넌트를 루트컴포넌트로 하고싶다.
 	SetRootComponent(Root);
 
@@ -26,6 +28,14 @@ APlayerPawn::APlayerPawn()
 	FirePosition->SetRelativeLocationAndRotation(
 		FVector(0, 0, 90),
 		FRotator(90, 0, 0));
+
+	ConstructorHelpers::FObjectFinder<USoundWave> tempFireSFX(TEXT("/Script/Engine.SoundWave'/Game/Laser_Gunshots_SFX_Pack1/Wave/48kHz-24bit/With_Added_Thump/Laser_Gun_Thump_P1.Laser_Gun_Thump_P1'"));
+
+	if (tempFireSFX.Succeeded())
+	{
+		FireSFX = tempFireSFX.Object;
+	}
+	
 }
 
 // Called when the game starts or when spawned
@@ -98,7 +108,6 @@ void APlayerPawn::OnMyVertical(float value)
 
 void APlayerPawn::OnMyFirePressed()
 {
-	bAutoFire = true;
 	// 이 함수가 호출되면 bAutoFire가 true라면 false로 false라면 true로 하고싶다.
 	//bAutoFire = !bAutoFire;
 	// if (bAutoFire)
@@ -106,6 +115,8 @@ void APlayerPawn::OnMyFirePressed()
 	// else
 	// 	bAutoFire = true;
 
+	bAutoFire = true;
+	
 	if (bAutoFire)
 	{
 		MakeBullet();
@@ -117,8 +128,7 @@ void APlayerPawn::OnMyFirePressed()
 		if (true == bAutoFire)
 		{
 			// 타이머를 이용해서 총알을 쏘기 시작
-			GetWorld()->GetTimerManager().SetTimer(
-				AutoFireHandle, this, &APlayerPawn::MakeBullet, FireTime, true);
+			GetWorld()->GetTimerManager().SetTimer(AutoFireHandle, this, &APlayerPawn::MakeBullet, FireTime, true);
 		}
 	}
 }
@@ -138,4 +148,7 @@ void APlayerPawn::MakeBullet()
 {
 	FTransform t = FirePosition->GetComponentTransform();
 	GetWorld()->SpawnActor<ABulletActor>(BulletFactory, t);
+
+	// 발사 효과음을 출력하고싶다.
+	UGameplayStatics::PlaySound2D(GetWorld(), FireSFX);
 }

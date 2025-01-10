@@ -3,13 +3,16 @@
 
 #include "BulletActor.h"
 
+#include "EnemyActor.h"
+#include "Components/BoxComponent.h"
+
 // Sets default values
 ABulletActor::ABulletActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+	Root = CreateDefaultSubobject<UBoxComponent>(TEXT("Root"));
 	SetRootComponent(Root);
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
@@ -48,5 +51,17 @@ void ABulletActor::Tick(float DeltaTime)
 	FVector p0 = GetActorLocation();
 	FVector dir = GetActorForwardVector();
 	SetActorLocation(p0 + dir * Speed * DeltaTime);
+}
+
+void ABulletActor::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	Super::NotifyActorBeginOverlap(OtherActor);
+	// 너(Enemy)죽고 나죽자
+	AEnemyActor* enemy = Cast<AEnemyActor>(OtherActor);
+	if (enemy)
+	{
+		OtherActor->Destroy();
+	}
+	this->Destroy();
 }
 

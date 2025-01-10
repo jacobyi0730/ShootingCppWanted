@@ -32,7 +32,7 @@ public:
 	// 외관을 만들어서 보이게 하고싶다.
 	// Root, Mesh
 	UPROPERTY(EditAnywhere)
-	class USceneComponent* Root = nullptr;
+	class UBoxComponent* Root = nullptr;
 
 	UPROPERTY(EditAnywhere)
 	class UStaticMeshComponent* Mesh = nullptr;
@@ -78,6 +78,8 @@ public:
 	
 	FTimerHandle AutoFireHandle;
 
+	UPROPERTY(EditAnywhere)
+	class USoundBase* FireSFX;
 
 	
 };
