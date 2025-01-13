@@ -25,6 +25,10 @@ public:
 
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
+	UFUNCTION()
+	void OnMyBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+
+	
 	// 외형을 만들고 싶다.
 	UPROPERTY(EditAnywhere)
 	class UBoxComponent* Root;
@@ -35,4 +39,7 @@ public:
 	// 앞 방향으로 이동하고 싶다.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float Speed = 1000.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UParticleSystem* ExplosionVFX;
 };

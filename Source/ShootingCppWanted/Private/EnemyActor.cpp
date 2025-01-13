@@ -3,7 +3,9 @@
 
 #include "EnemyActor.h"
 
+#include "PlayerPawn.h"
 #include "Components/BoxComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
@@ -32,6 +34,13 @@ AEnemyActor::AEnemyActor()
 	{
 		Mesh->SetMaterial(0, tempMaterial.Object);
 	}
+
+	// Root와 Mesh의 충돌설정을 하고싶다.
+	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	Root->SetGenerateOverlapEvents(true);
+	Root->SetCollisionProfileName(TEXT("Enemy"));
+
 }
 
 // Called when the game starts or when spawned
@@ -76,3 +85,24 @@ void AEnemyActor::Tick(float DeltaTime)
 	
 }
 
+void AEnemyActor::OnMyBeginOverlap(
+	UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
+	const FHitResult& SweepResult)
+{
+	// 상대방이 플레이어라면
+	//APlayerPawn* player = Cast<APlayerPawn>(OtherActor);
+	// 너죽고 나죽고 하고싶다.
+	if (OtherActor->IsA<APlayerPawn>())
+	{
+		OtherActor->Destroy();
+	}
+	this->Destroy();
+
+	// 폭발 VFX를 표현하고싶다.
+	check(ExplosionVFX);
+	if (ExplosionVFX)
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionVFX, GetActorLocation());
+	}
+}

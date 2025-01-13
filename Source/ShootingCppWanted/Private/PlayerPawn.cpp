@@ -35,7 +35,12 @@ APlayerPawn::APlayerPawn()
 	{
 		FireSFX = tempFireSFX.Object;
 	}
-	
+	// Root와 Mesh의 충돌설정을 하고싶다.
+	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	Root->SetGenerateOverlapEvents(true);
+	Root->SetCollisionProfileName(TEXT("Player"));
+
 }
 
 // Called when the game starts or when spawned

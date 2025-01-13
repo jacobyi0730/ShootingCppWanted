@@ -23,6 +23,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION()
+	void OnMyBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+
 	// 충돌체를 Root로 하고싶다. 그리고 외관을 만들고싶다.
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	class UBoxComponent* Root;
@@ -39,4 +42,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector Direction;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UParticleSystem* ExplosionVFX;
 };
+
