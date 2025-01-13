@@ -68,7 +68,8 @@ void AEnemyActor::BeginPlay()
 	FRotator newRot = UKismetMathLibrary::MakeRotFromXZ(Direction, GetActorUpVector());
 
 	SetActorRotation(newRot);
-	
+
+	Root->OnComponentBeginOverlap.AddDynamic(this, &AEnemyActor::OnMyBeginOverlap);
 }
 
 // Called every frame
