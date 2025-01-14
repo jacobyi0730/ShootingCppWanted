@@ -29,7 +29,7 @@ public:
 	class USceneComponent* Root;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UArrowComponent* SpawnPoint;
+	TArray<class UArrowComponent*> SpawnPoints;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float CurrentTime;
@@ -39,4 +39,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<class AEnemyActor> EnemyFactory;
+
+	// 이전에 선택한 인덱스를 기억하고싶다.
+	int32 PrevChooseIndex = -1;
 };

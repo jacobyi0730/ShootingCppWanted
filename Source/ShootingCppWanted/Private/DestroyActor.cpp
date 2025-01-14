@@ -1,14 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "BulletActor.h"
+#include "DestroyActor.h"
 
-#include "EnemyActor.h"
 #include "Components/BoxComponent.h"
-#include "Kismet/GameplayStatics.h"
 
 // Sets default values
-ABulletActor::ABulletActor()
+ADestroyActor::ADestroyActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -38,59 +36,29 @@ ABulletActor::ABulletActor()
 	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	Root->SetGenerateOverlapEvents(true);
-	Root->SetCollisionProfileName(TEXT("Bullet"));
-
-	// Root->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	// Root->SetCollisionObjectType(ECC_GameTraceChannel1);
-	// Root->SetCollisionResponseToAllChannels(ECR_Ignore);
-	// Root->SetCollisionResponseToChannel(ECC_GameTraceChannel3, ECR_Overlap);
-	// Root->SetCollisionResponseToChannel(ECC_GameTraceChannel4, ECR_Overlap);
-
+	Root->SetCollisionProfileName(TEXT("DestroyZone"));
 }
 
 // Called when the game starts or when spawned
-void ABulletActor::BeginPlay()
+void ADestroyActor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// 충돌 컴포넌트에게 충돌시 호출할 이벤트 함수를 등록하고싶다.
-	Root->OnComponentBeginOverlap.AddDynamic(this, &ABulletActor::OnMyBeginOverlap);
+	Root->OnComponentBeginOverlap.AddDynamic(this, &ADestroyActor::OnMyBeginOverlap);
 }
 
 // Called every frame
-void ABulletActor::Tick(float DeltaTime)
+void ADestroyActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// 나의 앞 방향으로 이동하고싶다.
-	// P = P0 + vt
-	FVector p0 = GetActorLocation();
-	FVector dir = GetActorForwardVector();
-	SetActorLocation(p0 + dir * Speed * DeltaTime);
 }
 
-void ABulletActor::NotifyActorBeginOverlap(AActor* OtherActor)
-{
-	Super::NotifyActorBeginOverlap(OtherActor);
-}
-
-void ABulletActor::OnMyBeginOverlap(UPrimitiveComponent* OverlappedComponent,
+void ADestroyActor::OnMyBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 	AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
 	bool bFromSweep, const FHitResult& SweepResult)
 {
-	// 너(Enemy)죽고 나죽자
-	AEnemyActor* enemy = Cast<AEnemyActor>(OtherActor);
-	if (enemy)
-	{
-		OtherActor->Destroy();
-	}
-	this->Destroy();
-
-	// 폭발 VFX를 표현하고싶다.
-	check(ExplosionVFX);
-	if (ExplosionVFX)
-	{
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionVFX, GetActorLocation());
-	}
+	// 상대를 파괴하고싶다.
+	OtherActor->Destroy();
 }
 
