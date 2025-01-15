@@ -4,6 +4,7 @@
 #include "BulletActor.h"
 
 #include "EnemyActor.h"
+#include "ShootingGameMode.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -82,7 +83,12 @@ void ABulletActor::OnMyBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 	AEnemyActor* enemy = Cast<AEnemyActor>(OtherActor);
 	if (enemy)
 	{
+		// 만약 적과 부딪혔다면...
 		OtherActor->Destroy();
+		// 점수를 1점 증가시키고싶다.
+		// gamemode를 찾아서 점수를 1점 증가!
+		auto* gameMode = Cast<AShootingGameMode>(GetWorld()->GetAuthGameMode());
+		gameMode->AddScore(1);
 	}
 	this->Destroy();
 
