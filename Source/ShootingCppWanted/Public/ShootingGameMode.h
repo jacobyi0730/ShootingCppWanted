@@ -29,7 +29,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 Score;
 
+	// 만약 Score의 값이 HighScore의 값보다 크다면
+	// HighScore = Score 하고싶다.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 HighScore;
+
 	void AddScore(int32 value);
+
+	
 	
 	
 };
