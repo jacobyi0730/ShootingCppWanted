@@ -97,6 +97,8 @@ void AEnemyActor::OnMyBeginOverlap(
 	if (OtherActor->IsA<APlayerPawn>())
 	{
 		OtherActor->Destroy();
+		// 주인공이 파괴되면 게임 일시정지
+		UGameplayStatics::SetGamePaused(GetWorld(), true);
 	}
 	this->Destroy();
 

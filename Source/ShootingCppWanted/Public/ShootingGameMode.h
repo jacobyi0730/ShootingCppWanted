@@ -36,6 +36,13 @@ public:
 
 	void AddScore(int32 value);
 
+	// 저장하기, 읽어오기 기능을 만들고싶다.
+	FString SaveSlotName = TEXT("SaveGameData");
+	int32 SaveUserIndex = 0;
+
+	void MySaveGame(int32 newHighScore);
+	void MyLoadGame();
+
 	
 	
 	
