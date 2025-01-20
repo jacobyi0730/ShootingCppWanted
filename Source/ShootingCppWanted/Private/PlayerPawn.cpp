@@ -4,6 +4,7 @@
 #include "PlayerPawn.h"
 
 #include "BulletActor.h"
+#include "Blueprint/UserWidget.h"
 #include "Components/ArrowComponent.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -47,6 +48,14 @@ APlayerPawn::APlayerPawn()
 void APlayerPawn::BeginPlay()
 {
 	Super::BeginPlay();
+
+	MainUI = Cast<UUserWidget>(CreateWidget(GetWorld(), MainUIFactory));
+	
+	check(MainUI);
+	if (MainUI)
+	{
+		MainUI->AddToViewport();
+	}
 }
 
 // Called every frame

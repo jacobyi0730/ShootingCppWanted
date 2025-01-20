@@ -81,6 +81,19 @@ public:
 	UPROPERTY(EditAnywhere)
 	class USoundBase* FireSFX;
 
+	// WBP_Main을 생성해서 Viewport에 붙이고싶다.
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UUserWidget> MainUIFactory;
+
+	UPROPERTY(EditAnywhere)
+	class UUserWidget* MainUI;
+
+	// 체력을 만들어서 처리하고싶다.
+	UPROPERTY(EditAnywhere)
+	float Hp = 3;
+
+	UPROPERTY(EditAnywhere)
+	float MaxHp = 3;
 	
 };
 

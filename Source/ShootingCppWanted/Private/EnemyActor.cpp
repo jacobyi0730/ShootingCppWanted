@@ -92,13 +92,19 @@ void AEnemyActor::OnMyBeginOverlap(
 	const FHitResult& SweepResult)
 {
 	// 상대방이 플레이어라면
-	//APlayerPawn* player = Cast<APlayerPawn>(OtherActor);
-	// 너죽고 나죽고 하고싶다.
-	if (OtherActor->IsA<APlayerPawn>())
+	// 상대의 체력을 1감소하고싶다.
+	// 만약 체력이 0이하라면 상대를 파괴하고싶다.
+	// 나는 무조건 파괴되고싶다.
+	// if (OtherActor->IsA<APlayerPawn>())
+	if (APlayerPawn* player = Cast<APlayerPawn>(OtherActor))
 	{
-		OtherActor->Destroy();
-		// 주인공이 파괴되면 게임 일시정지
-		UGameplayStatics::SetGamePaused(GetWorld(), true);
+		player->Hp--;
+		if (player->Hp<=0)
+		{
+			player->Destroy();
+			// 주인공이 파괴되면 게임 일시정지
+			UGameplayStatics::SetGamePaused(GetWorld(), true);
+		}
 	}
 	this->Destroy();
 
