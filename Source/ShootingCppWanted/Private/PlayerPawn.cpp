@@ -4,6 +4,7 @@
 #include "PlayerPawn.h"
 
 #include "BulletActor.h"
+#include "MainUI.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/ArrowComponent.h"
 #include "Components/BoxComponent.h"
@@ -49,12 +50,14 @@ void APlayerPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
-	MainUI = Cast<UUserWidget>(CreateWidget(GetWorld(), MainUIFactory));
+	MainUI = Cast<UMainUI>(CreateWidget(GetWorld(), MainUIFactory));
 	
 	check(MainUI);
 	if (MainUI)
 	{
 		MainUI->AddToViewport();
+		// 게임오버UI를 보이지 않게하고싶다.
+		MainUI->SetActiveGameOver(false);
 	}
 }
 
@@ -165,4 +168,9 @@ void APlayerPawn::MakeBullet()
 
 	// 발사 효과음을 출력하고싶다.
 	UGameplayStatics::PlaySound2D(GetWorld(), FireSFX);
+}
+
+void APlayerPawn::SetActiveGameOver(bool value)
+{
+	MainUI->SetActiveGameOver(value);
 }

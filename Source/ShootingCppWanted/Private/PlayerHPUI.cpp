@@ -9,6 +9,7 @@
 void UPlayerHPUI::NativeConstruct()
 {
 	Super::NativeConstruct();
+	
 }
 
 void UPlayerHPUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)

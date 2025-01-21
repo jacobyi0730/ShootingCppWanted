@@ -104,6 +104,8 @@ void AEnemyActor::OnMyBeginOverlap(
 			player->Destroy();
 			// 주인공이 파괴되면 게임 일시정지
 			UGameplayStatics::SetGamePaused(GetWorld(), true);
+			// 게임오버 UI를 보이게 하고싶다.
+			player->SetActiveGameOver(true);
 		}
 	}
 	this->Destroy();

@@ -86,7 +86,7 @@ public:
 	TSubclassOf<class UUserWidget> MainUIFactory;
 
 	UPROPERTY(EditAnywhere)
-	class UUserWidget* MainUI;
+	class UMainUI* MainUI;
 
 	// 체력을 만들어서 처리하고싶다.
 	UPROPERTY(EditAnywhere)
@@ -94,6 +94,8 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	float MaxHp = 3;
+
+	void SetActiveGameOver(bool value);
 	
 };
 

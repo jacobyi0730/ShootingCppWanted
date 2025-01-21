@@ -20,4 +20,6 @@ public:
 
 	UPROPERTY(meta=(BindWidget))
 	class UGameOverUI* GameOver;
+
+	void SetActiveGameOver(bool value);
 };
