@@ -9,6 +9,9 @@
 #include "Components/ArrowComponent.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+
 
 // Sets default values
 APlayerPawn::APlayerPawn()
@@ -69,12 +72,14 @@ void APlayerPawn::Tick(float DeltaTime)
 	// P = P0 + vt
 	FVector p0 = GetActorLocation();
 	// 사용자의 입력에따라 방향을 만들고
-	FVector dir = FVector(0, H, 0) + FVector(0, 0, V);
+	//FVector dir = FVector(0, H, 0) + FVector(0, 0, V);
 	// 백터의 길이를 정규화 하고싶다.
 	//dir.Normalize();
-	FVector velocity = dir.GetSafeNormal() * Speed;
+	FVector velocity = Direction.GetSafeNormal() * Speed;
 	// 그 방향으로 이동하고 싶다.
 	SetActorLocation(p0 + velocity * DeltaTime);
+
+	Direction = FVector::ZeroVector;
 
 	// 만약 bAutoFire가 true라면
 	if (false == AutoTypeTimer && true == bAutoFire)
@@ -98,6 +103,26 @@ void APlayerPawn::SetupPlayerInputComponent(
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	APlayerController* pc = GetWorld()->GetFirstPlayerController();
+
+	UEnhancedInputLocalPlayerSubsystem* subSys = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(pc->GetLocalPlayer());
+
+	if (subSys)
+	{
+		subSys->RemoveMappingContext(IMC_Player);
+		subSys->AddMappingContext(IMC_Player, 0);
+	}
+
+	UEnhancedInputComponent* input = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+
+	input->BindAction(IA_Move, ETriggerEvent::Triggered, this, &APlayerPawn::OnMyMove);
+
+	input->BindAction(IA_Fire, ETriggerEvent::Started, this, &APlayerPawn::OnMyFireStarted);
+
+	input->BindAction(IA_Fire, ETriggerEvent::Canceled, this, &APlayerPawn::OnMyFireCompleted);
+
+	
+
 	// 가로축, 세로축 함수를 등록하고싶다.
 	PlayerInputComponent->BindAxis(
 		TEXT("Horizontal"), this, &APlayerPawn::OnMyHorizontal);
@@ -109,6 +134,26 @@ void APlayerPawn::SetupPlayerInputComponent(
 
 	PlayerInputComponent->BindAction(
 		TEXT("Fire"), IE_Released, this, &APlayerPawn::OnMyFireReleased);
+}
+
+void APlayerPawn::OnMyMove(const FInputActionValue& value)
+{
+	FVector2D position = value.Get<FVector2D>();
+	H = position.Y;
+	V = position.X;
+
+	Direction.Z = position.X;
+	Direction.Y = position.Y;
+}
+
+void APlayerPawn::OnMyFireStarted(const FInputActionValue& value)
+{
+	MakeBullet();
+}
+
+void APlayerPawn::OnMyFireCompleted(const FInputActionValue& value)
+{
+	
 }
 
 void APlayerPawn::OnMyHorizontal(float value)

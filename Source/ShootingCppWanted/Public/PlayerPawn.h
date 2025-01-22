@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "InputActionValue.h"
 #include "PlayerPawn.generated.h"
 
 class USceneComponent;
@@ -29,6 +30,24 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 public:
+
+	// EnhancedInput으로 바꾸고싶다.
+	// 액션, 매핑컨텍스트
+	// 액션의 기능(함수)
+	UPROPERTY(EditAnywhere)
+	class UInputMappingContext* IMC_Player;
+	
+	UPROPERTY(EditAnywhere)
+	class UInputAction* IA_Move;
+
+	UPROPERTY(EditAnywhere)
+	class UInputAction* IA_Fire;
+
+	void OnMyMove(const FInputActionValue& value);
+	void OnMyFireStarted(const FInputActionValue& value);
+	void OnMyFireCompleted(const FInputActionValue& value);
+
+	
 	// 외관을 만들어서 보이게 하고싶다.
 	// Root, Mesh
 	UPROPERTY(EditAnywhere)
@@ -41,11 +60,12 @@ public:
 	void OnMyHorizontal(float value);
 	void OnMyVertical(float value);
 
+	FVector Direction;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float H;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float V;
+	float V;  
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float Speed = 500.f;
