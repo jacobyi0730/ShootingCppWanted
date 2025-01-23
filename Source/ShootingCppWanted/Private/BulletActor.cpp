@@ -4,6 +4,7 @@
 #include "BulletActor.h"
 
 #include "EnemyActor.h"
+#include "PlayerPawn.h"
 #include "ShootingGameMode.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -81,16 +82,23 @@ void ABulletActor::OnMyBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 {
 	// 너(Enemy)죽고 나죽자
 	AEnemyActor* enemy = Cast<AEnemyActor>(OtherActor);
+	// 만약 적과 부딪혔다면...
 	if (enemy)
 	{
-		// 만약 적과 부딪혔다면...
-		OtherActor->Destroy();
-		// 점수를 1점 증가시키고싶다.
-		// gamemode를 찾아서 점수를 1점 증가!
-		auto* gameMode = Cast<AShootingGameMode>(GetWorld()->GetAuthGameMode());
-		gameMode->AddScore(1);
+		// enemy의 체력을 1감소하고싶다.
+		enemy->MyTakeDamage(1);
+		// enemy의 체력이 0이하라면
+		if (enemy->Hp <= 0)
+		{
+			OtherActor->Destroy();
+			// 점수를 1점 증가시키고싶다.
+			// gamemode를 찾아서 점수를 1점 증가!
+			auto* gameMode = Cast<AShootingGameMode>(GetWorld()->GetAuthGameMode());
+			gameMode->AddScore(1);
+		}
 	}
-	this->Destroy();
+	//this->Destroy();
+	GoMagazine();
 
 	// 폭발 VFX를 표현하고싶다.
 	check(ExplosionVFX);
@@ -98,5 +106,33 @@ void ABulletActor::OnMyBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 	{
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionVFX, GetActorLocation());
 	}
+}
+
+void ABulletActor::SetActive(bool value) const
+{
+	// 활성/비활성 하고싶다.
+	// visible
+	// collision
+	if (true == value)
+	{
+		Root->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		Mesh->SetVisibility(true);
+	}
+	else
+	{
+		Root->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		Mesh->SetVisibility(false);
+	}
+
+}
+
+void ABulletActor::GoMagazine()
+{
+	// 1. 비활성화하고싶다.
+	SetActive(false);
+	// 2. 플레이어을 찾고싶다.
+	auto* player = Cast<APlayerPawn>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	// 3. 플레이어의 탄창에 내가 추가되고싶다.
+	player->Magazine.Add(this);
 }
 

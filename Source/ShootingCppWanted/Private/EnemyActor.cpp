@@ -3,8 +3,10 @@
 
 #include "EnemyActor.h"
 
+#include "EnemyHPUI.h"
 #include "PlayerPawn.h"
 #include "Components/BoxComponent.h"
+#include "Components/WidgetComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -41,6 +43,15 @@ AEnemyActor::AEnemyActor()
 	Root->SetGenerateOverlapEvents(true);
 	Root->SetCollisionProfileName(TEXT("Enemy"));
 
+
+	WidgetHP = CreateDefaultSubobject<UWidgetComponent>(TEXT("WidgetHP"));
+	WidgetHP->SetupAttachment(RootComponent);
+
+	WidgetHP->SetRelativeLocationAndRotation(
+		FVector(-90, 10, 0),
+		FRotator(90, 0, 0));
+
+	WidgetHP->SetDrawSize(FVector2D(150, 25));
 }
 
 // Called when the game starts or when spawned
@@ -107,8 +118,9 @@ void AEnemyActor::OnMyBeginOverlap(
 			// 게임오버 UI를 보이게 하고싶다.
 			player->SetActiveGameOver(true);
 		}
+		this->Destroy();
 	}
-	this->Destroy();
+
 
 	// 폭발 VFX를 표현하고싶다.
 	check(ExplosionVFX);
@@ -116,4 +128,11 @@ void AEnemyActor::OnMyBeginOverlap(
 	{
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionVFX, GetActorLocation());
 	}
+}
+
+void AEnemyActor::MyTakeDamage(int32 damage)
+{
+	Hp -= damage;
+	UEnemyHPUI* EnemyHP = Cast<UEnemyHPUI>(WidgetHP->GetWidget());
+	EnemyHP->UpdateHp(Hp, MaxHp);
 }

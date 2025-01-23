@@ -116,6 +116,16 @@ public:
 	float MaxHp = 3;
 
 	void SetActiveGameOver(bool value);
+
+
+	// ObjectPool을 하고싶다.
+	// 탄창
+	UPROPERTY()
+	TArray<class ABulletActor*> Magazine;
+	// 최초 몇개 만들것인지?
+	UPROPERTY(EditAnywhere)
+	int32 BulletMaxCount = 30;
+	// 총알에 활성/비활성 기능필요
 	
 };
 

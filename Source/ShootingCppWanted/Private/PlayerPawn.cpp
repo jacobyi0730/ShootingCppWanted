@@ -53,6 +53,15 @@ void APlayerPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
+	Magazine.Empty(BulletMaxCount);
+	// 탄창에 총알을 생성해서 채우고싶다.
+	for (int32 i=0 ; i<BulletMaxCount ; i++)
+	{
+		auto* bullet = GetWorld()->SpawnActor<ABulletActor>(BulletFactory);
+		bullet->SetActive(false);
+		Magazine.Add(bullet);
+	}
+
 	MainUI = Cast<UMainUI>(CreateWidget(GetWorld(), MainUIFactory));
 	
 	check(MainUI);
@@ -208,8 +217,19 @@ void APlayerPawn::OnMyFireReleased()
 
 void APlayerPawn::MakeBullet()
 {
-	FTransform t = FirePosition->GetComponentTransform();
-	GetWorld()->SpawnActor<ABulletActor>(BulletFactory, t);
+	// 만약 탄창에 1개 이상 총알이 있다면
+	if (Magazine.Num() > 0)
+	{
+		FTransform t = FirePosition->GetComponentTransform();
+		//GetWorld()->SpawnActor<ABulletActor>(BulletFactory, t);
+
+		// 제일 앞에 있는 총알을 꺼내서 사용하고싶다.
+		auto* bullet = Magazine[0]; 
+		bullet->SetActive(true);
+		bullet->SetActorTransform(t);
+		// 탄창에서 해당 총알을 제거하고싶다.
+		Magazine.RemoveAt(0);
+	}
 
 	// 발사 효과음을 출력하고싶다.
 	UGameplayStatics::PlaySound2D(GetWorld(), FireSFX);
